@@ -54,3 +54,27 @@ console.log(tSquared)// tSquared on nyt [1, 4, 9]
     return 4 * 4
 }
 */
+console.log('-----------------------------------------------------------------')
+console.log('OLIOT')
+
+//Heini olio ja metodeja, joita voi lisätä
+const Heini = {
+    name: 'Heini Ahven',
+    age: 29,
+    education: 'KTM',
+    greet: function(){
+        console.log('Moimoi')
+    },
+    doAddition: function(a, b) {
+        console.log(a + b)
+      },
+}
+
+Heini.getOlder = function() {
+        this.age +=1;
+}
+
+console.log(Heini.age)
+Heini.getOlder()
+console.log(Heini.age)
+Heini.greet()

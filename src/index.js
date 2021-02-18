@@ -1,69 +1,50 @@
-import React from 'react'
+import React, { useState} from 'react'
 import ReactDOM from 'react-dom'
-
-const Header = props =>{
-  return<h1>{props.course}</h1>
-}
-
-
-//Course-olion taulukon tiedot
-const Content = props => {
-  return(
-    <div>
-      <Part part ={props.parts[0]}/>
-      <Part part ={props.parts[1]}/>
-      <Part part ={props.parts[2]}/>
-    </div>
-    
+//laskuri
+const Display = (props) => {
+  return (
+    <div>{props.counter}</div>
   )
 }
 
-//Missä muodossa olion tiedot näytetään
-const Part = props => {
+const Button = (props) => {
   return (
-    <p>
-      {props.part.name} {props.part.exercises}
-    </p>
-  );
-};
-
-//Laskee yhteen course-olion taulukon luvut
-const Total = props =>{
-  return (
-    <p>Number of exercises{" "} 
-      {props.parts[0].exercises +
-      props.parts[1].exercises +
-      props.parts[2].exercises}
-    </p>
+    <button onClick={props.handleClick}>
+      {props.text}
+    </button>
   )
 }
 
-const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
-  }
+const App = (props) => {
+  const [ counter, setCounter] = useState(0)//luodaan tila, jonka alkuarvo 0
+
+  /*const handleClick = () => {
+    console.log('clicked') sama funktio joka return-lausekkeessa
+  }*/
+
+  /*setTimeout(
+    () => setCounter(counter +1), 
+    1000 tässä lasku pyörii joka sekuntilla
+  )*/
+
+  const increaseByOne = () => setCounter(counter + 1)
+  const setToZero = () => setCounter(0)
+
 
   return (
     <div>
-      <Header course={course.name}/>
-      <Content parts= {course.parts}/>
-      <Total parts={course.parts}/>
-    </div>
+      <Display counter = {counter}/>
+      <Button handleClick={increaseByOne}
+      text='plus'
+      />
+      <Button handleClick={setToZero}
+      text='zero'
+      />
+      </div>
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+  ReactDOM.render(
+    <App />, 
+    document.getElementById('root')
+  )
