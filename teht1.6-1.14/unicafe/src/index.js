@@ -17,6 +17,7 @@ const Button = ({onClick, text}) => (
 const Statistics = (props) => {
   //kaikki statistiikka refaktoroitu omaan komponenttiin
   let {good, bad, neutral} = props
+  if (good+bad+neutral == 0) return(<div>No feedbacks given</div>)
   return (
   <div>
     <p>All:{(good+bad+neutral)}</p>
@@ -25,6 +26,7 @@ const Statistics = (props) => {
  </div>)
   
 }
+
   
 const App = () => {
   // tallenna napit omaan tilaansa
@@ -56,7 +58,7 @@ const App = () => {
       <p>Good {good}</p>
       <p>Neutral { neutral}</p>
       <p>Bad {bad}</p>
-      <Statistics good = {good} neutral = {neutral} bad = {bad} />
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
