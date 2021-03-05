@@ -13,6 +13,18 @@ const Button = ({onClick, text}) => (
     {text}
   </button>
 )
+
+const Statistics = (props) => {
+  //kaikki statistiikka refaktoroitu omaan komponenttiin
+  let {good, bad, neutral} = props
+  return (
+  <div>
+    <p>All:{(good+bad+neutral)}</p>
+    <p>Average: {(good-bad)/(good+bad+neutral)}</p>
+    <p>Positive: {(100*good/(good+bad+neutral))} %</p>
+ </div>)
+  
+}
   
 const App = () => {
   // tallenna napit omaan tilaansa
@@ -42,11 +54,9 @@ const App = () => {
       <Button onClick={handleBad} text='Bad'/>
       <Header2/>
       <p>Good {good}</p>
-      <p>Neutral {neutral}</p>
+      <p>Neutral { neutral}</p>
       <p>Bad {bad}</p>
-      <p>All:{(good+bad+neutral)}</p>
-      <p>Average: {(good-bad)/(good+bad+neutral)}</p>
-      <p>Positive: {(100*good/(good+bad+neutral))} %</p>
+      <Statistics good = {good} neutral = {neutral} bad = {bad} />
     </div>
   )
 }
