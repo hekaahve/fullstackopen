@@ -13,6 +13,20 @@
   }
 }
 
+table {
+  table-layout: fixed;
+  width: 10%;
+  border-collapse: collapse;
+  border: 4px black;
+}
+
+th, td {
+  padding: 1px;
+  border: 4px black;
+  background-color: aquamarine;
+}
+
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
