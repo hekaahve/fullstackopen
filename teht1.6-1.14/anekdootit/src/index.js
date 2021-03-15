@@ -31,11 +31,20 @@ const App = () => {
   }
 
   const handleVote =() => {
-    const copy = {...votes} //kopioidaan votes uuteen taulukkoon
+    const copy = [...votes] //kopioidaan votes uuteen taulukkoon
     copy[selected] = copy[selected]+1 //asetetaan valittu anekdootti +1
     setVotes(copy) //asetetaan votes kopio-taulukon arvoilla
   }
-
+  
+  const Biggest =() => {
+    const copy = [...votes] //kopioidaan votes uuteen taulukkoon
+    return (
+      <div>
+     <p>{anecdotes[copy.indexOf(Math.max.apply(Math,copy))]} <br/>
+      has {Math.max.apply(Math,copy)} votes.</p>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -43,6 +52,8 @@ const App = () => {
       <p>has {votes[selected]} votes</p>
       <Button handleClick = {handleSelected} text="Next anekdote"/>
       <Button handleClick = {handleVote} text = "Vote"/> 
+      <h2>Anecdote with most votes</h2>
+      <Biggest/>
     </div>
   )
 }
