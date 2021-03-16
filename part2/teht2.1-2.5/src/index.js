@@ -1,34 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const Header = props =>{
-  return<h1>{props.course}</h1>
-}
 
-
-//Course-olion taulukon tiedot
-const Content = props => {
-  return(
-    <div>
-      <Part part ={props.parts[0]}/>
-      <Part part ={props.parts[1]}/>
-      <Part part ={props.parts[2]}/>
-    </div>
-    
-  )
-}
-
-//Missä muodossa olion tiedot näytetään
-const Part = props => {
-  return (
-    <p>
-      {props.part.name} {props.part.exercises}
-    </p>
-  );
-};
 
 const Course = ({courses}) => {
-  console.log(courses)
   return (
     <div>
       <h1>{courses.name}</h1>
@@ -39,7 +14,15 @@ const Course = ({courses}) => {
           </li>
         )}
       </ul>
+      <Summa courses = {courses.parts}/>
     </div>
+  )
+}
+//Summa, tämä oli hankala?
+const Summa = (props) => {
+  const reducer = (sum, value) => sum + value.exercises;
+  return(
+    <h2>total of {props.courses.reduce(reducer, 0)} exerices</h2>
   )
 }
 
