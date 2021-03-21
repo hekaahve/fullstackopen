@@ -3,76 +3,86 @@ import ReactDOM from 'react-dom'
 
 
 
-const Course = ({courses}) => {
+const Course = (props) => {
+  console.log(props)
+  //tässä propsit ovat kaksi kurssi-oliota, jotka sisältävät tiedot sekä
+  //taulukot (parts) kurssin tiedoista. course on määritelty kutsussa
   return (
     <div>
-      <h1>{courses.name}</h1>
+      <h1>{props.course.name}</h1>  
       <ul>
-        {courses.parts.map(course => 
-          <li key={course.id}>
+        {props.course.parts.map(course => <li key={course.id}>
           {course.name} {course.exercises}
           </li>
         )}
       </ul>
-      <Summa courses = {courses.parts}/>
+      <Summa courses = {props.course.parts}/>
     </div>
   )
 }
-//Summa, tämä oli hankala?
+//Täällä summan propsit ovat kurssien kurssi-olioiden parts-taulukot
 const Summa = (props) => {
+  console.log(props)
   const reducer = (sum, value) => sum + value.exercises;
   return(
-    <h2>total of {props.courses.reduce(reducer, 0)} exerices</h2>
+    <div>total of {props.courses.reduce(reducer, 0)} exerices</div>
   )
 }
 
-/*Laskee yhteen course-olion taulukon luvut
-const Total = props =>{
-  return (
-    <p>Number of exercises{" "} 
-      {props.parts[0].exercises +
-      props.parts[1].exercises +
-      props.parts[2].exercises}
-    </p>
-  )
-}
-*/
 
 const App = () => {
 
-  const courses = {
-    name: 'Half Stack application development',
-    id:1,
-    parts: [ //tässä taulukko parts
-      {
-        name: 'Fundamentals of React',
-        exercises: 10,
-        id: 1
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 17,
-        id: 2
-      },
-      {
-        name: 'State of a component',
-        exercises: 14,
-        id: 3
-      },
+  const courses = [
+    {
+      name: 'Half Stack application development',
+      id: 1,
+      parts: [
+        {
+          name: 'Fundamentals of React',
+          exercises: 10,
+          id: 1
+        },
+        {
+          name: 'Using props to pass data',
+          exercises: 7,
+          id: 2
+        },
+        {
+          name: 'State of a component',
+          exercises: 14,
+          id: 3
+        },
+        {
+          name: 'Redux',
+          exercises: 11,
+          id: 4
+        }
+      ]
+    }, 
+    {
+      name: 'Node.js',
+      id: 2,
+      parts: [
+        {
+          name: 'Routing',
+          exercises: 3,
+          id: 1
+        },
+        {
+          name: 'Middlewares',
+          exercises: 7,
+          id: 2
+        }
+      ]
+    }
+  ]
 
-      {
-        name: 'Testitesti',
-        exercises: 14,
-        id: 4
-      }
-    ]
-  }
-
+  //<Course courses = {courses}/>
   return (
     <div>
-      <Course courses = {courses}/>
+      {courses.map(item => <Course key={courses.name} course = {item}/>)}
     </div>
   )
 }
     
-ReactDOM.render(<App />,  document.getElementById('root'))
+ReactDOM.render(<App/>,  document.getElementById('root'))
