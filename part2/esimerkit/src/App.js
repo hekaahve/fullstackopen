@@ -31,7 +31,7 @@ const App = (props) => {
    */
   const notesToShow = showAll
   ? notes
-  : notes.filter(note => note.important === true)
+  : notes.filter(note => note.important === true)//filtteröidään notes, joiden tärkeys on true
 
   return (
     <div>
