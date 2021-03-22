@@ -10,11 +10,14 @@ const App = () => {
     event.preventDefault()
     console.log('button clicked', event.target)
 
-    const nameObject = {
-      name: newName
-    }
+    const names = persons.map(item => item.name)
+    const reservName = names.includes(newName)
 
-    setPersons(persons.concat(nameObject))
+    //kattoo onko nimeä olemassa
+    const nameObject = {name: newName}
+    if (reservName === true){
+      window.alert(`${newName} is already added to phonebook`)
+    } else setPersons(persons.concat(nameObject))
     setNewName(' ')
 
   }
