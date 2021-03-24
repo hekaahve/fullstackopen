@@ -29,9 +29,17 @@ const App = () => {
 
     
   }
-  //tätä en tajua
-  const namesToShow = persons.filter(person=> person.name.toLowerCase().indexOf(filtName.toLowerCase())=== 0)
-  
+  /**
+   * Jos filteröidään sen indeksin perusteella, jossa filtteröitävä nimi on,
+   * palauttaa taulukon, jossa kaikki muut nimet. Jos laitetaan, että 
+   * index on yhtä kuin nolla, tekee päin vastoin, eli hakee juurikin
+   * filtteröitävät indeksit
+   */
+  const namesToShow = persons.filter(person=> person.name.toLowerCase().indexOf(filtName.toLowerCase()) === 0)
+  var testi = ["antti", "krisu", "heini", "miia"]
+  var uusi = testi.filter(p => p.indexOf("k")=== 0) //hakee krisun. Jos nolla poistetaan, hakee kaikki muut 
+  console.log(uusi)
+
   const handleNameChange = (event) =>{
     console.log(event.target.value)
     setNewName(event.target.value)
