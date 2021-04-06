@@ -10,6 +10,7 @@ const App = () => {
   const [ newNumb, setNewNumb ] = useState('')
   const [ filtName, setFiltName ] = useState('')
 
+  //haetaan persons-data palvelimelta
   useEffect(() => {
     console.log('effect')
     axios
