@@ -1,23 +1,28 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState, useEffect} from 'react'
+
+import axios from 'axios'
 
 function App() {
+
+  const [ countries, setCountries] = useState([]) 
+
+  //haetaan countries-data palvelimelta
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('https://restcountries.eu/rest/v2/all')
+      .then(response => {
+        console.log('promise fulfilled')
+        setCountries(response.data)
+      })
+  }, [])
+  console.log('render', countries.length, 'countries')
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      find countries <input/>
+      {countries.map(country => <p key={country.name}>{country.name}</p> )}
     </div>
   );
 }
