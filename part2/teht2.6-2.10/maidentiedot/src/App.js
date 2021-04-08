@@ -3,6 +3,25 @@ import React, { useState, useEffect} from 'react'
 
 import axios from 'axios'
 
+const Content = ({countries, filter}) => {
+  //rajaa maat hakuehdon (nimen) mukaan
+  console.log(countries.length)
+  const countriesToShow = countries.filter(country => country.name.toLowerCase().indexOf(filter.toLowerCase())=== 0) 
+  if (countriesToShow.length > 10){
+    return (
+      <div>
+        Too many matches, specify another filterss
+      </div>
+    )
+  }
+  
+  return (
+    <div>
+      {countriesToShow.map(country => <li key={country.name}>{country.name}</li> )}
+    </div>
+  )
+}
+
 function App() {
 
   const [ countries, setCountries] = useState([]) 
@@ -22,15 +41,13 @@ function App() {
     setFilter(event.target.value)
   }
 
-  //rajaa maat hakuehdon (nimen) mukaan
-  const countriesToShow = countries.filter(country => country.name.toLowerCase().indexOf(filter.toLowerCase())=== 0)
 
   //näyttää nyt kaikki maat, filtteri lisätty mutta ei rajaa lukumäärää
   return (
     <div>
       find countries <input value={filter}
       onChange={handleFilterChange}/>
-      {countriesToShow.map(country => <li key={country.name}>{country.name}</li> )}
+      <Content countries = {countries} filter = {filter}/>
     </div>
   );
 }
