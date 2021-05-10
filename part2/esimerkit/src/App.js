@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import Note from './components/Note'
+import noteService from './services/notes' 
 
 
 const App = (props) => {
@@ -9,15 +10,18 @@ const App = (props) => {
   const [showAll, setShowAll] = useState(true)
 
 useEffect(() => {
-  console.log('effect')
-  axios.get('http://localhost:3001/notes')
-  .then(response => {//then -metodilla rekisteröidään tapahtumankuuntelija
-    console.log('promise fullfilled')
-    setNotes(response.data)//tallettaa tilaan palvelimen palauttamat muistiinpanot
+  noteService
+  .getAll()
+  .then(initialNotes => {//then -metodilla rekisteröidään tapahtumankuuntelija
+    setNotes(initialNotes)//tallettaa tilaan palvelimen palauttamat muistiinpanot
   })
 }, [])
 console.log('render', notes.length, 'notes')
 
+/**
+ * Lisätään uusi muistiinpano
+ * @param {*} event 
+ */
   const addNote = (event) => {
     event.preventDefault()//estää sivun uudelleenlatautumisen
     console.log('button clicked', event.target)
@@ -25,16 +29,40 @@ console.log('render', notes.length, 'notes')
       content: newNote,
       date: new Date().toISOString,
       important: Math.random() > 0.5,
-      id: notes.length + 1, 
     }
 
-    setNotes(notes.concat(noteObject))//lisätään uusi note taulukkoon (luodaan uusi)
-    setNewNote(' ')
+    noteService
+    .create(noteObject)
+    .then(returnedNote => {
+      setNotes(notes.concat(returnedNote))
+      setNewNote('')
+    })
   }
 
   const handleNoteChange = (event) => {
     console.log(event.target.value)//target viittaa input-kenttään
     setNewNote(event.target.value)//event.target.value viittaa inputin syötekentän arvoon.
+  }
+
+  /**
+   * Vaihdetaan muistiinpanon tärkeysarvoa
+   * @param {*} id 
+   */
+  const toggleImportanceOf = (id) => {
+    const note = notes.find(n => n.id === id)
+    const changedNote = { ...note, important: !note.important }//{ ... note} luo olion, jolla on kenttinään kopiot olion note kenttien arvoista
+
+    noteService
+    .update(id, changedNote)
+    .then(returnedNote => {
+      setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+    /*
+    Operaatio siis luo uuden taulukon vanhan taulukon perusteella. 
+    Jokainen uuden taulukon alkio luodaan ehdollisesti siten, että jos ehto note.id !== id on tosi, 
+    otetaan uuteen taulukkoon suoraan vanhan taulukon kyseinen alkio. 
+    Jos ehto on epätosi, eli kyseessä on muutettu muistiinpano, otetaan uuteen taulukkoon palvelimen palauttama olio.
+    */
+    })
   }
 
   /**
@@ -55,7 +83,11 @@ console.log('render', notes.length, 'notes')
       </div>
       <ul>
         {notesToShow.map(note => 
-          <Note key={note.id} note={note} />
+          <Note 
+            key={note.id} 
+            note={note}
+            toggleImportance={() => toggleImportanceOf(note.id)}
+             />
         )}
       </ul>
       <form onSubmit={addNote}>
