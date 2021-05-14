@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './App.css';
-
 import axios from 'axios'
+import personService from './Services/Persons'
 
 
 const App = () => {
@@ -10,16 +10,15 @@ const App = () => {
   const [ newNumb, setNewNumb ] = useState('')
   const [ filtName, setFiltName ] = useState('')
 
-  //haetaan persons-data palvelimelta
+  //haetaan persons-data palvelimelta käyttäen Services/Persons moduulia
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(initialPersons =>{
+        setPersons(initialPersons)
       })
   }, [])
+  
   console.log('render', persons.length, 'persons')
 
   const addName = (event) =>{
@@ -33,12 +32,12 @@ const App = () => {
     const nameObject = {name: newName, number: newNumb}
     if (reservName === true){
       window.alert(`${newName} is already added to phonebook`)
-    } else axios
-    .post('http://localhost:3001/persons', nameObject)
-    .then(response => {
-      setPersons(persons.concat(nameObject))
-      setNewName(' ')
-      setNewNumb(' ')
+    } else personService
+      .create(nameObject)
+      .then(response => {
+        setPersons(persons.concat(nameObject))
+        setNewName(' ')
+        setNewNumb(' ')
     })
   }
   /**
