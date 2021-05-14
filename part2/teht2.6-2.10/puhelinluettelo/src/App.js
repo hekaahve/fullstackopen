@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import './App.css';
 import axios from 'axios'
 import personService from './Services/Persons'
+import Person from './conponents/Person'
 
 
 const App = () => {
@@ -40,6 +41,26 @@ const App = () => {
         setNewNumb(' ')
     })
   }
+
+      ///EI TOIMI VIELÄ, poistaa mutta ei palauta tilaa takaisin
+      const toggleDeleteOf = (id) => {
+        let removedperson = persons.find(n => n.id === id).name
+        //const changedPerson = { ...person, important: !note.important }//{ ... note} luo olion, jolla on kenttinään kopiot olion note kenttien arvoista
+        if (window.confirm( `Poistetaanko ${ removedperson }?` ) ){
+          personService
+          .remove( id )
+          .then( setPersons( { persons: persons.filter( person => person.id !== id ) } ) );
+      }
+    }
+
+
+    /*
+    Operaatio siis luo uuden taulukon vanhan taulukon perusteella. 
+    Jokainen uuden taulukon alkio luodaan ehdollisesti siten, että jos ehto note.id !== id on tosi, 
+    otetaan uuteen taulukkoon suoraan vanhan taulukon kyseinen alkio. 
+    Jos ehto on epätosi, eli kyseessä on muutettu muistiinpano, otetaan uuteen taulukkoon palvelimen palauttama olio.
+    */
+
   /**
    * Jos filteröidään sen indeksin perusteella, jossa filtteröitävä nimi on,
    * palauttaa taulukon, jossa kaikki muut nimet. Jos laitetaan, että 
@@ -93,9 +114,13 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
+
       <ul>
-        {namesToShow.map(name=> <li key={name.name}>
-          {name.name} {name.number}</li>)}
+        {namesToShow.map(person=> 
+          <Person key= {person.name}
+          person = {person}
+          toggleDelete={() => toggleDeleteOf(person.id)}/>
+        )}
       </ul>
     </div>
   )

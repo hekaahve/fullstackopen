@@ -1,16 +1,6 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": 1
-    },
-    {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": 2
-    },
-    {
       "name": "Dan Abramov",
       "number": "12-43-234345",
       "id": 3
@@ -26,29 +16,9 @@
       "id": 5
     },
     {
-      "name": "Moikku",
-      "number": "0303030",
-      "id": 6
-    },
-    {
-      "name": " Jooo",
-      "number": "+5+5+5+00000",
-      "id": 7
-    },
-    {
-      "name": " Moi",
-      "number": "030330",
-      "id": 8
-    },
-    {
-      "name": "rkrkrk",
-      "number": "03030303",
+      "name": " poistaa,muttei palauta tilaal",
+      "number": "999999",
       "id": 9
-    },
-    {
-      "name": "Testitesti",
-      "number": "000000",
-      "id": 10
     }
   ]
 }

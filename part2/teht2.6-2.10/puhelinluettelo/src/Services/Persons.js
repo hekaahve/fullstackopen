@@ -14,8 +14,13 @@ const update = (id, newObject) => {
   return axios.put(`${baseUrl}/${id}`, newObject)
 }
 
-export default { 
-  getAll: getAll, 
-  create: create, 
-  update: update 
+const remove = (id) =>{
+  const request = axios.delete( `${ baseUrl }/${ id }` );
+  return request.then( response => response.status );
 }
+
+export default { getAll, create, update, remove }
+/**
+ * Muistiinpanopalvelut määrittelevä moduuli siis eksporttaa olion, 
+ * jonka kenttinä getAll, create ja update ovat muistiinpanojen käsittelyyn tarkoitetut funktiot.
+ */
