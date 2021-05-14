@@ -29,15 +29,17 @@ const App = () => {
     const names = persons.map(item => item.name)
     const reservName = names.includes(newName)
 
-    //kattoo onko syötettyä nimeä olemassa
+    //kattoo onko syötettyä nimeä olemassa, jos ei, lisää nimen
     const nameObject = {name: newName, number: newNumb}
     if (reservName === true){
       window.alert(`${newName} is already added to phonebook`)
-    } else setPersons(persons.concat(nameObject))
-    setNewName(' ')
-    setNewNumb(' ')
-
-    
+    } else axios
+    .post('http://localhost:3001/persons', nameObject)
+    .then(response => {
+      setPersons(persons.concat(nameObject))
+      setNewName(' ')
+      setNewNumb(' ')
+    })
   }
   /**
    * Jos filteröidään sen indeksin perusteella, jossa filtteröitävä nimi on,
@@ -46,9 +48,9 @@ const App = () => {
    * filtteröitävät indeksit
    */
   const namesToShow = persons.filter(person=> person.name.toLowerCase().indexOf(filtName.toLowerCase()) === 0)
-  var testi = ["antti", "krisu", "heini", "miia"]
-  var uusi = testi.filter(p => p.indexOf("k")=== 0) //hakee krisun. Jos nolla poistetaan, hakee kaikki muut 
-  console.log(uusi)
+  //var testi = ["antti", "krisu", "heini", "miia"]
+  //var uusi = testi.filter(p => p.indexOf("k")=== 0) //hakee krisun. Jos nolla poistetaan, hakee kaikki muut 
+  //console.log(uusi)
 
   const handleNameChange = (event) =>{
     console.log(event.target.value)
