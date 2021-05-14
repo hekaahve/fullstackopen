@@ -24,7 +24,6 @@ const App = () => {
 
   const addName = (event) =>{
     event.preventDefault()
-    console.log('button clicked', event.target)
 
     const names = persons.map(item => item.name)
     const reservName = names.includes(newName)
@@ -49,7 +48,7 @@ const App = () => {
         if (window.confirm( `Poistetaanko ${ removedperson }?` ) ){
           personService
           .remove( id )
-          .then( setPersons( { persons: persons.filter( person => person.id !== id ) } ) );
+          .then( setPersons( persons.filter( person => person.id !== id ) ) );
       }
     }
 
