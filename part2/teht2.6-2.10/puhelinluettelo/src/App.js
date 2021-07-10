@@ -10,10 +10,10 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumb, setNewNumb ] = useState('')
   const [ filtName, setFiltName ] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const Notification = ({ message }) => {
-    const errorstyle = {
+    let errorstyle = {
       color: 'green',
       background: 'lightgrey',
       fontSize: 20,
@@ -52,10 +52,20 @@ const App = () => {
     const reservName = names.includes(newName)
 
     //kattoo onko syötettyä nimeä olemassa, jos ei, lisää nimen
-    //laita tähän vielä numeron korvaaminen
+    //laita tähän vielä numeron korvaaminen (MITEN)
     const nameObject = {name: newName, number: newNumb}
     if (reservName === true){
-      window.alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook, will old number replaced to new one?`)){
+        //let id = persons.find(person => person.name == nameObject.name).id;
+        //let person = persons.find(person.id)
+        /*personService
+        .update(id, nameObject)
+        .then(response=> {
+          setPersons(persons.find(person.number=nameObject.number))
+          setNewName(' ')
+          setNewNumb(' ')
+          })*/
+      }
     } else personService
       .create(nameObject)
       .then(response => {
