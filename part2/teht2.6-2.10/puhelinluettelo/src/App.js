@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import './App.css';
 import axios from 'axios'
+import './index.css';
 import personService from './Services/Persons'
 import Person from './conponents/Person'
 
@@ -10,6 +10,29 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumb, setNewNumb ] = useState('')
   const [ filtName, setFiltName ] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+
+  const Notification = ({ message }) => {
+    const errorstyle = {
+      color: 'green',
+      background: 'lightgrey',
+      fontSize: 20,
+      borderStyle: 'solid',
+      borderRadius: '5px',
+      padding: '10px',
+      marginBottom: '10px'
+    }
+
+    if (message === null) {
+      return null
+    }
+  
+    return (
+      <div style={errorstyle}>
+        {message}
+      </div>
+    )
+  }
 
   //haetaan persons-data palvelimelta käyttäen Services/Persons moduulia
   useEffect(() => {
@@ -29,6 +52,7 @@ const App = () => {
     const reservName = names.includes(newName)
 
     //kattoo onko syötettyä nimeä olemassa, jos ei, lisää nimen
+    //laita tähän vielä numeron korvaaminen
     const nameObject = {name: newName, number: newNumb}
     if (reservName === true){
       window.alert(`${newName} is already added to phonebook`)
@@ -38,10 +62,17 @@ const App = () => {
         setPersons(persons.concat(nameObject))
         setNewName(' ')
         setNewNumb(' ')
+        setErrorMessage(
+          `${newName}' Added`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
     })
+    
   }
 
-      ///EI TOIMI VIELÄ, poistaa mutta ei palauta tilaa takaisin
+      //poisto
       const toggleDeleteOf = (id) => {
         let removedperson = persons.find(n => n.id === id).name
         //const changedPerson = { ...person, important: !note.important }//{ ... note} luo olion, jolla on kenttinään kopiot olion note kenttien arvoista
@@ -95,6 +126,7 @@ const App = () => {
       }
     }>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
       <div>
           filter shown with <input value = {filtName}
           onChange={handleFilterchange}/>

@@ -8,6 +8,7 @@ const App = (props) => {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('a new note....')
   const [showAll, setShowAll] = useState(true)
+  const [errorMessage, setErrorMessage] = useState('some error happened...')
 
 useEffect(() => {
   noteService
@@ -63,6 +64,15 @@ console.log('render', notes.length, 'notes')
     Jos ehto on epätosi, eli kyseessä on muutettu muistiinpano, otetaan uuteen taulukkoon palvelimen palauttama olio.
     */
     })
+    .catch(error => {
+      setErrorMessage(
+        `Note '${note.content}' was already removed from server`
+      )
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      setNotes(notes.filter(n => n.id !== id))
+    })
   }
 
   /**
@@ -73,9 +83,38 @@ console.log('render', notes.length, 'notes')
   ? notes
   : notes.filter(note => note.important === true)//filtteröidään notes, joiden tärkeys on true
 
+  const Notification = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+  
+    return (
+      <div className="error">
+        {message}
+      </div>
+    )
+  }
+
+  //INLINE-style, tyylin kirjoittaminen suoraan koodiin
+  const Footer = () => {
+    const footerStyle = {
+      color: 'green',
+      fontStyle: 'italic',
+      fontSize: 16
+    }
+  
+    return (
+      <div style={footerStyle}>
+        <br />
+        <em>Note app, Department of Computer Science, University of Helsinki 2021</em>
+      </div>
+    )
+  }
+
   return (
     <div>
       <h1>Notes</h1>
+      <Notification message={errorMessage} />
       <div>
         <button onClick={()=> setShowAll(!showAll)}>
         show {showAll ? 'important' : 'all'}
@@ -96,6 +135,7 @@ console.log('render', notes.length, 'notes')
         />
         <button type="submit">save</button>
       </form>   
+      <Footer />
     </div>
   )
 }
