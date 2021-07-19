@@ -51,20 +51,21 @@ const App = () => {
     const names = persons.map(item => item.name)
     const reservName = names.includes(newName)
 
-    //kattoo onko syötettyä nimeä olemassa, jos ei, lisää nimen
-    //laita tähän vielä numeron korvaaminen (MITEN)
+    /**
+     *katsoo onko syötettyä nimeä olemassa, jos ei, lisää nimen. Jos nimi olemassa, 
+     päivittää olemassa olevan nimen puhelinnumeron 
+     */
     const nameObject = {name: newName, number: newNumb}
     if (reservName === true){
       if (window.confirm(`${newName} is already added to phonebook, will old number replaced to new one?`)){
-        //let id = persons.find(person => person.name == nameObject.name).id;
-        //let person = persons.find(person.id)
-        /*personService
+        let id = persons.find(person => person.name == nameObject.name).id;
+        personService
         .update(id, nameObject)
         .then(response=> {
-          setPersons(persons.find(person.number=nameObject.number))
+          setPersons(persons.map(person => person.id !== id ? person : response.data))
           setNewName(' ')
           setNewNumb(' ')
-          })*/
+          })
       }
     } else personService
       .create(nameObject)
