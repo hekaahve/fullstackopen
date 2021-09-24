@@ -94,24 +94,7 @@ const App = () => {
       }
     }
 
-
-    /*
-    Operaatio siis luo uuden taulukon vanhan taulukon perusteella. 
-    Jokainen uuden taulukon alkio luodaan ehdollisesti siten, että jos ehto note.id !== id on tosi, 
-    otetaan uuteen taulukkoon suoraan vanhan taulukon kyseinen alkio. 
-    Jos ehto on epätosi, eli kyseessä on muutettu muistiinpano, otetaan uuteen taulukkoon palvelimen palauttama olio.
-    */
-
-  /**
-   * Jos filteröidään sen indeksin perusteella, jossa filtteröitävä nimi on,
-   * palauttaa taulukon, jossa kaikki muut nimet. Jos laitetaan, että 
-   * index on yhtä kuin nolla, tekee päin vastoin, eli hakee juurikin
-   * filtteröitävät indeksit
-   */
   const namesToShow = persons.filter(person=> person.name.toLowerCase().indexOf(filtName.toLowerCase()) === 0)
-  //var testi = ["antti", "krisu", "heini", "miia"]
-  //var uusi = testi.filter(p => p.indexOf("k")=== 0) //hakee krisun. Jos nolla poistetaan, hakee kaikki muut 
-  //console.log(uusi)
 
   const handleNameChange = (event) =>{
     console.log(event.target.value)
@@ -127,8 +110,6 @@ const App = () => {
     //console.log(event.target.value)    
     setFiltName(event.target.value)  
   }
-
-  
 
   return (
     <div style ={
