@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import './index.css';
 import personService from './Services/Persons'
 import Person from './conponents/Person'
@@ -34,7 +33,7 @@ const App = () => {
     )
   }
 
-  //haetaan persons-data palvelimelta käyttäen Services/Persons moduulia
+  //fletch persons-data from the server using Services/Persons module
   useEffect(() => {
     personService
       .getAll()
@@ -43,31 +42,11 @@ const App = () => {
       })
   }, [])
   
-  console.log('render', persons.length, 'persons')
-
   const addName = (event) =>{
     event.preventDefault()
 
-    const names = persons.map(item => item.name)
-    const reservName = names.includes(newName)
-
-    /**
-     *katsoo onko syötettyä nimeä olemassa, jos ei, lisää nimen. Jos nimi olemassa, 
-     päivittää olemassa olevan nimen puhelinnumeron 
-     */
     const nameObject = {name: newName, number: newNumb}
-    if (reservName === true){
-      if (window.confirm(`${newName} is already added to phonebook, will old number replaced to new one?`)){
-        let id = persons.find(person => person.name == nameObject.name).id;
-        personService
-        .update(id, nameObject)
-        .then(response=> {
-          setPersons(persons.map(person => person.id !== id ? person : response.data))
-          setNewName(' ')
-          setNewNumb(' ')
-          })
-      }
-    } else personService
+    personService
       .create(nameObject)
       .then(response => {
         setPersons(persons.concat(nameObject))
@@ -80,10 +59,8 @@ const App = () => {
           setErrorMessage(null)
         }, 5000)
     })
-    
   }
-
-      //poisto
+      //delete person
       const toggleDeleteOf = (id) => {
         let removedperson = persons.find(n => n.id === id).name
         //const changedPerson = { ...person, important: !note.important }//{ ... note} luo olion, jolla on kenttinään kopiot olion note kenttien arvoista
@@ -140,14 +117,13 @@ const App = () => {
 
       <ul>
         {namesToShow.map(person=> 
-          <Person key= {person.name}
+          <Person key= {person.id}
           person = {person}
           toggleDelete={() => toggleDeleteOf(person.id)}/>
         )}
       </ul>
     </div>
   )
-
 }
 
 export default App

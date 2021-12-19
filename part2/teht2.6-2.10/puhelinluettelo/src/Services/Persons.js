@@ -20,7 +20,3 @@ const remove = (id) =>{
 }
 
 export default { getAll, create, update, remove }
-/**
- * Muistiinpanopalvelut määrittelevä moduuli siis eksporttaa olion, 
- * jonka kenttinä getAll, create ja update ovat muistiinpanojen käsittelyyn tarkoitetut funktiot.
- */
