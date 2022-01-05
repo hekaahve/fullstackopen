@@ -45,8 +45,23 @@ const App = () => {
   const addName = (event) =>{
     event.preventDefault()
 
+    const names = persons.map(item => item.name)
+    const reservName = names.includes(newName)
+
     const nameObject = {name: newName, number: newNumb}
-    personService
+    
+    if (reservName === true){
+      if (window.confirm(`${newName} is already added to phonebook, will old number replaced to new one?`)){
+        let id = persons.find(person => person.name == nameObject.name).id;
+        personService
+        .update(id, nameObject)
+        .then(response=> {
+          setPersons(persons.map(person => person.id !== id ? person : response.data))
+          setNewName(' ')
+          setNewNumb(' ')
+          })
+      }
+    } else personService
       .create(nameObject)
       .then(response => {
         setPersons(persons.concat(nameObject))
