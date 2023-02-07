@@ -5,6 +5,7 @@ import NoteForm from "./components/NoteForm";
 import Notification from "./components/Notification";
 import noteService from "./services/notes";
 import loginService from "./services/login";
+import LoginForm from "./components/LoginForm";
 
 const App = (props) => {
   const [notes, setNotes] = useState([]);
@@ -17,11 +18,19 @@ const App = (props) => {
 
   useEffect(() => {
     noteService.getAll().then((initialNotes) => {
-      //then -metodilla rekisteröidään tapahtumankuuntelija
-      setNotes(initialNotes); //tallettaa tilaan palvelimen palauttamat muistiinpanot
+      setNotes(initialNotes);
     });
   }, []);
-  console.log("render", notes.length, "notes");
+
+  //TODO: create logout!
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      noteService.setToken(user.token);
+    }
+  }, []);
 
   /**
    * Lisätään uusi muistiinpano
@@ -59,12 +68,6 @@ const App = (props) => {
       .update(id, changedNote)
       .then((returnedNote) => {
         setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)));
-        /*
-    Operaatio siis luo uuden taulukon vanhan taulukon perusteella. 
-    Jokainen uuden taulukon alkio luodaan ehdollisesti siten, että jos ehto note.id !== id on tosi, 
-    otetaan uuteen taulukkoon suoraan vanhan taulukon kyseinen alkio. 
-    Jos ehto on epätosi, eli kyseessä on muutettu muistiinpano, otetaan uuteen taulukkoon palvelimen palauttama olio.
-    */
       })
       .catch((error) => {
         setErrorMessage(
@@ -83,9 +86,10 @@ const App = (props) => {
    */
   const notesToShow = showAll
     ? notes
-    : notes.filter((note) => note.important === true); //filtteröidään notes, joiden tärkeys on true
+    : notes.filter((note) => note.important === true);
 
   //TODO: Make this as own component
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -110,6 +114,12 @@ const App = (props) => {
     </form>
   );
 
+  const noteForm = () => (
+    <form onSubmit={addNote}>
+      <input value={newNote} onChange={handleNoteChange} />
+      <button type="submit">save</button>
+    </form>
+  );
   const handleLogin = async (event) => {
     event.preventDefault();
     console.log("logging in with", username, password);
@@ -118,6 +128,8 @@ const App = (props) => {
         username,
         password,
       });
+      window.localStorage.setItem("loggedNoteappUser", JSON.stringify(user));
+      noteService.setToken(user.token);
       setUser(user);
       setUsername("");
       setPassword("");
@@ -133,19 +145,11 @@ const App = (props) => {
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
-
       {!user && loginForm()}
-      <p>{user}</p>
       {user && (
         <div>
           <p>{user.name} logged in</p>
-          {
-            <NoteForm
-              onSubmit={addNote}
-              value={newNote}
-              onChange={() => handleNoteChange()}
-            />
-          }
+          {noteForm()}
         </div>
       )}
 
