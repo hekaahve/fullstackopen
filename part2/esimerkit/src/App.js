@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Note from "./components/Note";
 import Footer from "./components/Footer";
 import Togglable from "./components/Togglable";
@@ -10,13 +10,11 @@ import LoginForm from "./components/LoginForm";
 
 const App = (props) => {
   const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState("a new note....");
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState("Hello notes");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [loginVisible, setLoginVisible] = useState(false);
 
   useEffect(() => {
     noteService.getAll().then((initialNotes) => {
@@ -33,32 +31,22 @@ const App = (props) => {
     }
   }, []);
 
+  const noteFormRef = useRef();
+
   /**
    * Lisätään uusi muistiinpano
    * @param {*} event
    */
-  const addNote = (event) => {
-    event.preventDefault(); //estää sivun uudelleenlatautumisen
-    console.log("button clicked", event.target);
-    const noteObject = {
-      content: newNote,
-      date: new Date().toISOString,
-      important: Math.random() > 0.5,
-    };
-
+  const addNote = (noteObject) => {
+    noteFormRef.current.toggleVisibility();
     noteService.create(noteObject).then((returnedNote) => {
       setNotes(notes.concat(returnedNote));
-      setNewNote("");
     });
+
     setErrorMessage(`Note '${noteObject.content}' added`);
     setTimeout(() => {
       setErrorMessage(null);
     }, 5000);
-  };
-
-  const handleNoteChange = (event) => {
-    console.log(event.target.value); //target viittaa input-kenttään
-    setNewNote(event.target.value); //event.target.value viittaa inputin syötekentän arvoon.
   };
 
   /**
@@ -139,12 +127,8 @@ const App = (props) => {
       {user && (
         <div>
           <p>{user.name} logged in </p>
-          <Togglable buttonLabel="new note">
-            <NoteForm
-              onSubmit={addNote}
-              value={newNote}
-              handleChange={handleNoteChange}
-            />
+          <Togglable buttonLabel="new note" ref={noteFormRef}>
+            <NoteForm createNote={addNote} />
           </Togglable>
           <button onClick={() => handleLogout()}>logout</button>{" "}
         </div>
