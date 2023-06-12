@@ -15,6 +15,7 @@ const App = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  const [loginVisible, setLoginVisible] = useState(false);
 
   useEffect(() => {
     noteService.getAll().then((initialNotes) => {
@@ -22,7 +23,6 @@ const App = (props) => {
     });
   }, []);
 
-  //TODO: create logout!
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser");
     if (loggedUserJSON) {
@@ -49,6 +49,10 @@ const App = (props) => {
       setNotes(notes.concat(returnedNote));
       setNewNote("");
     });
+    setErrorMessage(`Note '${noteObject.content}' added`);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
   };
 
   const handleNoteChange = (event) => {
@@ -88,38 +92,13 @@ const App = (props) => {
     ? notes
     : notes.filter((note) => note.important === true);
 
-  //TODO: Make this as own component
-
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  );
-
   const noteForm = () => (
     <form onSubmit={addNote}>
       <input value={newNote} onChange={handleNoteChange} />
       <button type="submit">save</button>
     </form>
   );
+
   const handleLogin = async (event) => {
     event.preventDefault();
     console.log("logging in with", username, password);
@@ -142,13 +121,34 @@ const App = (props) => {
   };
 
   const handleLogout = () => {
-    // event.preventDefault();
     window.localStorage.removeItem("loggedNoteappUser");
     console.log("logged out");
     setUser(null);
     window.location.reload(false);
   };
 
+  const loginForm = () => {
+    const hideWhenVisible = { display: loginVisible ? "none" : "" };
+    const showWhenVisible = { display: loginVisible ? "" : "none" };
+
+    return (
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>Log in</button>
+        </div>
+        <div style={showWhenVisible}>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+          <button onClick={() => setLoginVisible(false)}>Cancel</button>
+        </div>
+      </div>
+    );
+  };
   return (
     <div>
       <h1>Notes</h1>
