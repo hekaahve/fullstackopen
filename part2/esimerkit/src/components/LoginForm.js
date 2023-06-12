@@ -1,33 +1,33 @@
 import React from "react";
-import loginService from "../services/login";
-//TODO: refactor login form to own component
+
 const LoginForm = ({
-  handleLogin,
+  handleSubmit,
+  handleUsernameChange,
+  handlePasswordChange,
   username,
-  setUsername,
   password,
-  setPassword,
-}) => (
-  <form onSubmit={handleLogin}>
+}) => {
+  return (
     <div>
-      username
-      <input
-        type="text"
-        value={username}
-        name="Username"
-        onChange={setUsername}
-      />
+      <h2>Login</h2>
+
+      <form onSubmit={handleSubmit}>
+        <div>
+          username
+          <input value={username} onChange={handleUsernameChange} />
+        </div>
+        <div>
+          password
+          <input
+            type="password"
+            value={password}
+            onChange={handlePasswordChange}
+          />
+        </div>
+        <button type="submit">login</button>
+      </form>
     </div>
-    <div>
-      password
-      <input
-        type="password"
-        value={password}
-        name="Password"
-        onChange={setPassword}
-      />
-    </div>
-    <button type="submit">login</button>
-  </form>
-);
+  );
+};
+
 export default LoginForm;
