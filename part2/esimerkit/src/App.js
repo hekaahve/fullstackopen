@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Note from "./components/Note";
 import Footer from "./components/Footer";
+import Togglable from "./components/Togglable";
 import NoteForm from "./components/NoteForm";
 import Notification from "./components/Notification";
 import noteService from "./services/notes";
@@ -92,13 +93,6 @@ const App = (props) => {
     ? notes
     : notes.filter((note) => note.important === true);
 
-  const noteForm = () => (
-    <form onSubmit={addNote}>
-      <input value={newNote} onChange={handleNoteChange} />
-      <button type="submit">save</button>
-    </form>
-  );
-
   const handleLogin = async (event) => {
     event.preventDefault();
     console.log("logging in with", username, password);
@@ -127,16 +121,12 @@ const App = (props) => {
     window.location.reload(false);
   };
 
-  const loginForm = () => {
-    const hideWhenVisible = { display: loginVisible ? "none" : "" };
-    const showWhenVisible = { display: loginVisible ? "" : "none" };
-
-    return (
-      <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>Log in</button>
-        </div>
-        <div style={showWhenVisible}>
+  return (
+    <div>
+      <h1>Notes</h1>
+      <Notification message={errorMessage} />
+      {!user && (
+        <Togglable buttonLabel="login">
           <LoginForm
             username={username}
             password={password}
@@ -144,23 +134,19 @@ const App = (props) => {
             handlePasswordChange={({ target }) => setPassword(target.value)}
             handleSubmit={handleLogin}
           />
-          <button onClick={() => setLoginVisible(false)}>Cancel</button>
-        </div>
-      </div>
-    );
-  };
-  return (
-    <div>
-      <h1>Notes</h1>
-      <Notification message={errorMessage} />
-      {!user && loginForm()}
+        </Togglable>
+      )}
       {user && (
         <div>
-          <p>
-            {user.name} logged in{" "}
-            <button onClick={() => handleLogout()}>logout</button>{" "}
-          </p>
-          {noteForm()}
+          <p>{user.name} logged in </p>
+          <Togglable buttonLabel="new note">
+            <NoteForm
+              onSubmit={addNote}
+              value={newNote}
+              handleChange={handleNoteChange}
+            />
+          </Togglable>
+          <button onClick={() => handleLogout()}>logout</button>{" "}
         </div>
       )}
 
